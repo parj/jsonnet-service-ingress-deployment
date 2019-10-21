@@ -1,0 +1,127 @@
+// Template for a basic service, deployment and ingress
+
+{
+    // Required arguments for this template
+    serviceName:: error "serviceName must be specified",
+    dockerImage:: error "dockerImage must be specified",
+    servicePort:: error "servicePort must be specified",
+    servicePortType:: "ClusterIP",
+    namespace:: "default",
+    host:: "mysterious-grass-savages.github",
+    url:: error "URL must be specified",
+    environment:: "dev",
+    
+
+    //optional arguments
+    volumeMounts:: {},
+    env:: {},
+    volumes:: {},
+    livenessProbe:: {},
+    readinessProbe:: {},
+    replicas:: {},
+
+    local service = {
+        apiVersion: "v1",
+        kind: "Service",
+        metadata: {
+            name: $.serviceName + "-service",
+        },
+        spec: {
+            selector: {
+                app: $.serviceName 
+            },
+            ports: [
+                {
+                    protocol: "TCP",
+                    port: $.servicePort,
+                    targetPort: $.servicePort
+                },
+            ],
+            type: $.servicePortType,
+        },
+    },
+
+    local deployment = {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+            "name": $.serviceName + "-deployment",
+            "labels": {
+                "app": $.serviceName,
+                "environment": $.environment,
+            }
+        },
+        "spec": {
+            "replicas": if std.length($.replicas) > 0 then $.replicas else 2,
+            "selector": {
+                "matchLabels": {
+                    "app": $.serviceName
+                }
+            },
+            "template": {
+                "metadata": {
+                    "labels": {
+                        "app": $.serviceName
+                    }
+                },
+                "spec": {
+                    "containers": [
+                        {
+                            "name": $.serviceName,
+                            "image": $.dockerImage,
+                            "ports": [
+                                {
+                                    "name": "container-port",
+                                    "containerPort": $.servicePort
+                                }
+                            ],
+                            
+                            [if std.length($.volumeMounts) > 0 then "volumeMounts"]: [ item
+                                for item in $.volumeMounts
+                            ],
+                            [if std.length($.env) > 0 then "env"]: [ item
+                                for item in $.env
+                            ],
+                            [if std.length($.livenessProbe) > 0 then "livenessProbe"]: if std.length($.livenessProbe) > 0 then $.livenessProbe ,
+                            [if std.length($.readinessProbe) > 0 then "readinessProbe"]: if std.length($.readinessProbe) > 0 then $.readinessProbe ,
+                        }
+                    ],
+                    [if std.length($.volumes) > 0 then "volumes"]: [ item
+                            for item in $.volumes
+                    ]
+                }
+            }
+        }
+    },
+
+    local ingress = {
+        "apiVersion": "extensions/v1beta1",
+        "kind": "Ingress",
+        "metadata": {
+            "name": $.serviceName + "-ingress",
+            "namespace": $.namespace,
+        },
+         "spec": {
+            "rules": [
+                {
+                    "host": $.host,
+                    "http": {
+                        "paths": [
+                            {
+                                "path": $.url,
+                                "backend": {
+                                    "serviceName": $.serviceName + "-service",
+                                    "servicePort": $.servicePort 
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    },
+
+    apiVersion: "v1",
+    kind: "List",
+    items: [service, ingress, deployment],
+}
