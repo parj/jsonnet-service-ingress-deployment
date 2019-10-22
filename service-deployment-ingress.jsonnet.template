@@ -9,10 +9,10 @@
     namespace:: "default",
     host:: "mysterious-grass-savages.github",
     url:: error "URL must be specified",
-    environment:: "dev",
-    
+    environment:: "dev",    
 
     //optional arguments
+    serviceAccountName:: "",
     volumeMounts:: {},
     env:: {},
     volumes:: {},
@@ -88,7 +88,8 @@
                     ],
                     [if std.length($.volumes) > 0 then "volumes"]: [ item
                             for item in $.volumes
-                    ]
+                    ],
+                    [if std.length($.serviceAccountName) > 0 then "serviceAccountName"]: if std.length($.livenessProbe) > 0 then $.serviceAccountName
                 }
             }
         }
