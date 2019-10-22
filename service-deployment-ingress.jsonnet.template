@@ -52,7 +52,7 @@
             }
         },
         "spec": {
-            "replicas": if std.length($.replicas) > 0 then $.replicas else 2,
+            "replicas": if std.length($.replicas) > 0 then std.parseInt($.replicas) else 2,
             "selector": {
                 "matchLabels": {
                     "app": $.serviceName
