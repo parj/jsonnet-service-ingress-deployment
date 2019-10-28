@@ -1,8 +1,18 @@
+[![Build Status](https://travis-ci.org/parj/jsonnet-service-ingress-deployment.svg?branch=master)](https://travis-ci.org/parj/jsonnet-service-ingress-deployment)
+
 # jsonnet-service-ingress-deployment
 This repository holds the master Kubernetes jsonnet template
 
 # Pre-requisites
 Jsonnet is required. Instructions to install are here -> http://github.com/google/jsonnet
+
+## MacOS
+
+`brew install jsonnet`
+
+## Other platforms
+
+`go get github.com/google/go-jsonnet/cmd/jsonnet`
 
 # Using the template
 
@@ -56,3 +66,7 @@ sampleSpringBootAppDeployment.samplespringbootapp()
 ```
 
 To apply to Kubernetes - `jsonnet samplespringbootapp.jsonnet | kubectl apply -f -`
+
+# To run tests
+
+Run `./test.sh`
