@@ -7,4 +7,5 @@ addons:
     packages:
     - bats
     - bc
+    - jsonnet
 script: ./test.sh
