@@ -1,0 +1,14 @@
+local serviceDeployment = import "../../service-deployment-ingress.jsonnet.template";
+
+local samplespringbootapp() = serviceDeployment + {
+    serviceName:: "samplespringbootapp",
+    dockerImage:: "parjanya/samplespringbootapp:1.6-SNAPSHOT",
+    servicePort:: 9999,
+    url:: "/hello",
+    replicas:: 50
+};
+
+// Export the function as a constructor for shards
+{
+  samplespringbootapp:: samplespringbootapp,
+}

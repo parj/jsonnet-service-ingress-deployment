@@ -1,0 +1,6 @@
+local serviceDeployment = import "../../service-deployment-ingress.jsonnet.template";
+
+local empty() = serviceDeployment + {
+};
+
+{ empty:: empty, }

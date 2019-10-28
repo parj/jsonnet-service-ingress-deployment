@@ -8,7 +8,7 @@
     servicePortType:: "ClusterIP",
     namespace:: "default",
     host:: "mysterious-grass-savages.github",
-    url:: error "URL must be specified",
+    url:: error "Ingress URL must be specified",
     environment:: "dev",    
 
     //optional arguments
@@ -18,7 +18,7 @@
     volumes:: {},
     livenessProbe:: {},
     readinessProbe:: {},
-    replicas:: {},
+    replicas:: 2,
 
     local service = {
         apiVersion: "v1",
@@ -52,7 +52,7 @@
             }
         },
         "spec": {
-            "replicas": if std.length($.replicas) > 0 then std.parseInt($.replicas) else 2,
+            "replicas": $.replicas,
             "selector": {
                 "matchLabels": {
                     "app": $.serviceName

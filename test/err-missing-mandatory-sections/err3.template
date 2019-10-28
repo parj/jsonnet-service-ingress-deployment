@@ -1,0 +1,12 @@
+local serviceDeployment = import "../../service-deployment-ingress.jsonnet.template";
+
+local err3() = serviceDeployment + {
+    serviceName:: "samplespringbootapp",
+    servicePort:: 9999,
+    url:: "/foo/bar"
+};
+
+// Export the function as a constructor for shards
+{
+  err3:: err3,
+}

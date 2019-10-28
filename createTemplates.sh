@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 set -e
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
@@ -9,10 +9,9 @@ PARAMS=""
 
 function main() {
     parseArgs "$@"
+    check_errs $? "Unable to parse args"
     prerequisites
     check_errs $? "Pre-requisites does not exist"
-    parseArgs
-    check_errs $? "Unable to parse args"
     checkIfTemplateExists
     check_errs $? "Unable to download template"
     if $KUBERNETES ; then

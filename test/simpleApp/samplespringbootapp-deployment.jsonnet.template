@@ -1,0 +1,34 @@
+local serviceDeployment = import "../../service-deployment-ingress.jsonnet.template";
+
+local samplespringbootapp() = serviceDeployment + {
+    serviceName:: "samplespringbootapp",
+    dockerImage:: "parjanya/samplespringbootapp:1.6-SNAPSHOT",
+    servicePort:: 9999,
+    url:: "/hello",
+
+    readinessProbe::
+        {
+            "httpGet": {
+                "path": "/hello/actuator/health",
+                "port": "container-port"
+            },
+            "initialDelaySeconds": 8,
+            "periodSeconds": 10
+        },
+
+    livenessProbe::
+        {
+            "httpGet": {
+                "path": "/hello/commitId",
+                "port": "container-port"
+            },
+            "initialDelaySeconds": 8,
+            "periodSeconds": 10
+        },
+
+};
+
+// Export the function as a constructor for shards
+{
+  samplespringbootapp:: samplespringbootapp,
+}
