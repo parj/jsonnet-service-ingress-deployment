@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/parj/jsonnet-service-ingress-deployment.svg?branch=master)](https://travis-ci.org/parj/jsonnet-service-ingress-deployment)
+[![Build Status](https://travis-ci.org/parj/jsonnet-service-ingress-deployment.svg?branch=master)](https://travis-ci.org/parj/jsonnet-service-ingress-deployment) [![CircleCI](https://circleci.com/gh/parj/jsonnet-service-ingress-deployment.svg?style=svg)](https://circleci.com/gh/parj/jsonnet-service-ingress-deployment)
 
 # jsonnet-service-ingress-deployment
 This repository holds the master Kubernetes jsonnet template
@@ -16,7 +16,7 @@ Jsonnet is required. Instructions to install are here -> http://github.com/googl
 
 # Using the template
 
-Example of using this is here -> https://github.com/parj/SampleSpringBootApp/tree/master/kubernetes-template
+Example of using this is in the `test` directory of this repo. The directory `minimalApp`, `simpleApp` has working examples.
 
 A deployment `template` is required. Example - `samplespringbootapp-deployment.jsonnet.template`
 
@@ -69,4 +69,20 @@ To apply to Kubernetes - `jsonnet samplespringbootapp.jsonnet | kubectl apply -f
 
 # To run tests
 
-Run `./test.sh`
+Run `git submodule update --init --recursive`. This needs to be run only once.
+
+Run `./test.sh` to trigger tests. This should give the following output
+
+    ✓ Should fail when missing all mandatory attributes
+    ✓ Should fail when only 1 mandatory attribute is added
+    ✓ Should fail when only 2 mandatory attributes are added
+    ✓ Should fail when only 3 mandatory attributes are added
+    ✓ minimalApp should succeed when building the jsonnet template
+    ✓ minimalApp should have a Deployment section
+    ✓ minimalApp should have 50 replicas
+    ✓ SimpleApp should succeed when building the jsonnet template
+    ✓ SimpleApp should have a Service section
+    ✓ SimpleApp should have a Ingress section
+    ✓ SimpleApp should have a Deployment section
+
+    11 tests, 0 failures
